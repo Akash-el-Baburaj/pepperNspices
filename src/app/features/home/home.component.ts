@@ -66,28 +66,28 @@ import { ProductCardComponent } from '../../shared/components/product-card.compo
       </section>
 
       <!-- TRUST BADGES / CHOOSE US -->
-      <section class="py-12 bg-cinnamon-100/60 border-y border-cinnamon-200">
+      <section class="py-16 bg-burlap border-y border-cinnamon-250">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div class="flex items-center gap-4 p-4 rounded-xl bg-white/50 border border-cinnamon-200/50 shadow-xs">
+            <div [appTilt]="4" class="flex items-center gap-4 p-5 border-torn bg-white border border-cinnamon-200 shadow-xs transition-all hover:scale-103 cursor-pointer">
               <span class="text-3xl p-3 bg-saffron-100 rounded-2xl text-saffron-700">🌱</span>
               <div>
-                <h3 class="text-sm font-bold text-peppercorn-900 uppercase tracking-wider">100% Single Origin</h3>
-                <p class="text-xs text-peppercorn-600 mt-0.5">Sourced from single, verified heritage estates.</p>
+                <h3 class="text-xs font-extrabold text-peppercorn-900 uppercase tracking-widest">100% Single Origin</h3>
+                <p class="text-[11px] text-peppercorn-600 mt-0.5">Sourced from single, verified heritage estates.</p>
               </div>
             </div>
-            <div class="flex items-center gap-4 p-4 rounded-xl bg-white/50 border border-cinnamon-200/50 shadow-xs">
+            <div [appTilt]="4" class="flex items-center gap-4 p-5 border-torn bg-white border border-cinnamon-200 shadow-xs transition-all hover:scale-103 cursor-pointer">
               <span class="text-3xl p-3 bg-chili-100 rounded-2xl text-chili-700">🥣</span>
               <div>
-                <h3 class="text-sm font-bold text-peppercorn-900 uppercase tracking-wider">Small-Batch Ground</h3>
-                <p class="text-xs text-peppercorn-600 mt-0.5">Stone-ground weekly to preserve volatile oils.</p>
+                <h3 class="text-xs font-extrabold text-peppercorn-900 uppercase tracking-widest">Small-Batch Ground</h3>
+                <p class="text-[11px] text-peppercorn-600 mt-0.5">Stone-ground weekly to preserve volatile oils.</p>
               </div>
             </div>
-            <div class="flex items-center gap-4 p-4 rounded-xl bg-white/50 border border-cinnamon-200/50 shadow-xs">
+            <div [appTilt]="4" class="flex items-center gap-4 p-5 border-torn bg-white border border-cinnamon-200 shadow-xs transition-all hover:scale-103 cursor-pointer">
               <span class="text-3xl p-3 bg-cinnamon-100 rounded-2xl text-cinnamon-700">🤝</span>
               <div>
-                <h3 class="text-sm font-bold text-peppercorn-900 uppercase tracking-wider">Direct Trade Ethics</h3>
-                <p class="text-xs text-peppercorn-600 mt-0.5">Fair premiums paid directly to local cultivators.</p>
+                <h3 class="text-xs font-extrabold text-peppercorn-900 uppercase tracking-widest">Direct Trade Ethics</h3>
+                <p class="text-[11px] text-peppercorn-600 mt-0.5">Fair premiums paid directly to local cultivators.</p>
               </div>
             </div>
           </div>
@@ -95,7 +95,7 @@ import { ProductCardComponent } from '../../shared/components/product-card.compo
       </section>
 
       <!-- CATEGORY TILES -->
-      <section class="py-24 bg-cinnamon-50">
+      <section class="py-24 bg-parchment relative">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div class="text-center max-w-xl mx-auto mb-16">
             <span class="text-xs font-extrabold text-chili-600 uppercase tracking-widest">Spice Classes</span>
@@ -108,7 +108,7 @@ import { ProductCardComponent } from '../../shared/components/product-card.compo
               <div 
                 [routerLink]="['/shop']" 
                 [queryParams]="{category: cat.slug}"
-                class="group relative h-72 rounded-2xl overflow-hidden shadow-xs hover:shadow-md border border-cinnamon-100 cursor-pointer transition-all duration-300"
+                class="group relative h-72 border-torn-card overflow-hidden shadow-xs hover:shadow-md border border-cinnamon-200/50 cursor-pointer transition-all duration-300"
               >
                 <img 
                   [src]="cat.image" 
@@ -130,8 +130,8 @@ import { ProductCardComponent } from '../../shared/components/product-card.compo
       </section>
 
       <!-- PARALLAX PRODUCT SHOWCASE -->
-      <section class="relative py-28 bg-peppercorn-950 text-white overflow-hidden">
-        <div class="absolute inset-0 bg-gradient-to-b from-peppercorn-950 to-peppercorn-900"></div>
+      <section class="relative py-28 bg-wood-grain text-white overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-b from-peppercorn-950/85 to-peppercorn-900/95 pointer-events-none"></div>
 
         <div class="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">

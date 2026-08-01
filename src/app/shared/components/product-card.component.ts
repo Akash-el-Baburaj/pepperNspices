@@ -17,13 +17,13 @@ import { TiltDirective } from '../directives/tilt.directive';
       <div 
         [appTilt]="6" 
         [scale]="1.03"
-        class="group relative flex flex-col justify-between overflow-hidden rounded-2xl bg-white border border-cinnamon-100 shadow-sm hover:shadow-lg transition-all duration-300 h-full"
+        class="group relative flex flex-col justify-between overflow-hidden border-torn-card bg-parchment border border-cinnamon-200/60 shadow-sm hover:shadow-lg transition-all duration-300 h-full"
       >
         <!-- Badge tags -->
         @if (product().tags.length > 0) {
           <div class="absolute top-3 left-3 z-10 flex flex-wrap gap-1">
             @for (tag of product().tags.slice(0, 2); track tag) {
-              <span class="text-[9px] font-extrabold uppercase tracking-wider text-cinnamon-800 bg-cinnamon-100/90 backdrop-blur-xs px-2 py-0.5 rounded-full border border-cinnamon-200">
+              <span class="text-[9px] font-extrabold uppercase tracking-wider text-cinnamon-850 bg-burlap label-badge border border-cinnamon-250/40 px-2.5 py-0.5">
                 {{ tag }}
               </span>
             }
@@ -38,7 +38,7 @@ import { TiltDirective } from '../directives/tilt.directive';
           <img 
             [src]="product().images[0]" 
             [alt]="product().name"
-            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 saturate-90 brightness-95 contrast-105"
             loading="lazy"
           />
           <div class="absolute inset-0 bg-gradient-to-t from-peppercorn-950/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -103,7 +103,7 @@ import { TiltDirective } from '../directives/tilt.directive';
       </div>
     } @else {
       <!-- LIST VIEW MODE -->
-      <div class="flex flex-col md:flex-row gap-6 p-4 md:p-6 rounded-2xl bg-white border border-cinnamon-100 shadow-sm hover:shadow-lg transition-all duration-300 w-full">
+      <div class="flex flex-col md:flex-row gap-6 p-4 md:p-6 border-torn-card bg-parchment border border-cinnamon-200/60 shadow-sm hover:shadow-lg transition-all duration-300 w-full">
         <!-- Image container -->
         <div 
           [routerLink]="['/product', product().id]"
@@ -112,11 +112,11 @@ import { TiltDirective } from '../directives/tilt.directive';
           <img 
             [src]="product().images[0]" 
             [alt]="product().name"
-            class="w-full h-full object-cover transition-transform duration-700 hover:scale-110"
+            class="w-full h-full object-cover transition-transform duration-700 hover:scale-110 saturate-90 brightness-95 contrast-105"
             loading="lazy"
           />
           @if (product().tags.length > 0) {
-            <span class="absolute top-2 left-2 text-[9px] font-extrabold uppercase tracking-wider text-cinnamon-800 bg-cinnamon-100/90 backdrop-blur-xs px-2 py-0.5 rounded-full border border-cinnamon-200">
+            <span class="absolute top-2 left-2 text-[9px] font-extrabold uppercase tracking-wider text-cinnamon-850 bg-burlap label-badge border border-cinnamon-250/40 px-2.5 py-0.5">
               {{ product().tags[0] }}
             </span>
           }

@@ -2,6 +2,8 @@ import { Component, signal, HostListener, inject, computed } from '@angular/core
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { CartService } from '../../core/services/cart.service';
+import { MockAuthService } from '../../core/services/mock-auth.service';
+
 
 @Component({
   selector: 'app-header',
@@ -95,6 +97,41 @@ import { CartService } from '../../core/services/cart.service';
 
           <!-- Utilities (Search / Cart / Mobile Trigger) -->
           <div class="flex items-center gap-4">
+            <!-- User Session Account Dropdown / Login link -->
+            <div class="relative group">
+              @if (isLoggedIn()) {
+                <button 
+                  class="flex items-center justify-center focus:outline-none"
+                  routerLink="/profile"
+                >
+                  <img 
+                    [src]="currentUser()?.avatar" 
+                    [alt]="currentUser()?.name" 
+                    class="w-7 h-7 rounded-full object-cover ring-2 ring-saffron-500/20 hover:ring-saffron-500 transition-all"
+                  />
+                </button>
+                <!-- User Account Dropdown -->
+                <div class="absolute right-0 top-full hidden group-hover:block w-48 bg-peppercorn-900 border border-cinnamon-850 rounded-xl shadow-xl p-3 z-50 mt-1 select-none">
+                  <div class="border-b border-cinnamon-950/50 pb-2 mb-2 text-left">
+                    <h4 class="text-xs font-bold text-white truncate">{{ currentUser()?.name }}</h4>
+                    <p class="text-[9px] text-gray-500 truncate leading-none mt-0.5">{{ currentUser()?.email }}</p>
+                  </div>
+                  <div class="grid gap-1.5 text-left text-xs font-semibold">
+                    <a routerLink="/profile" class="hover:text-saffron-400 text-gray-300 py-1 transition-colors">My Profile</a>
+                    <a routerLink="/profile" class="hover:text-saffron-400 text-gray-300 py-1 transition-colors">Order History</a>
+                    <button (click)="onLogout()" class="text-left hover:text-chili-400 text-gray-300 py-1 transition-colors">Logout</button>
+                  </div>
+                </div>
+              } @else {
+                <a 
+                  routerLink="/login"
+                  class="text-xs font-bold text-gray-300 hover:text-saffron-400 transition-colors uppercase tracking-wider py-1.5 px-3 bg-white/5 hover:bg-white/10 rounded-xl"
+                >
+                  Sign In
+                </a>
+              }
+            </div>
+
             <!-- Mini Cart Trigger -->
             <div class="relative group">
               <button 
@@ -187,7 +224,13 @@ import { CartService } from '../../core/services/cart.service';
           </div>
           
           <a routerLink="/shop" (click)="closeMobileMenu()" class="block text-sm font-bold text-gray-200 hover:text-saffron-400 py-2 border-b border-white/5">All Spices</a>
-          <a routerLink="/about" (click)="closeMobileMenu()" class="block text-sm font-bold text-gray-200 hover:text-saffron-400 py-2">Our Story</a>
+          <a routerLink="/about" (click)="closeMobileMenu()" class="block text-sm font-bold text-gray-200 hover:text-saffron-400 py-2 border-b border-white/5">Our Story</a>
+          @if (isLoggedIn()) {
+            <a routerLink="/profile" (click)="closeMobileMenu()" class="block text-sm font-bold text-gray-200 hover:text-saffron-400 py-2 border-b border-white/5">My Account</a>
+            <button (click)="onLogout(); closeMobileMenu()" class="block w-full text-left text-sm font-bold text-chili-400 py-2">Sign Out</button>
+          } @else {
+            <a routerLink="/login" (click)="closeMobileMenu()" class="block text-sm font-bold text-gray-200 hover:text-saffron-400 py-2">Sign In</a>
+          }
         </div>
       }
     </header>
@@ -195,6 +238,7 @@ import { CartService } from '../../core/services/cart.service';
 })
 export class HeaderComponent {
   private readonly cartService = inject(CartService);
+  private readonly authService = inject(MockAuthService);
 
   protected readonly isScrolled = signal(false);
   protected readonly isMobileMenuOpen = signal(false);
@@ -202,6 +246,13 @@ export class HeaderComponent {
   protected readonly cartItems = this.cartService.cartItems;
   protected readonly cartCount = this.cartService.cartCount;
   protected readonly cartSubtotal = this.cartService.cartSubtotal;
+
+  protected readonly currentUser = this.authService.currentUser;
+  protected readonly isLoggedIn = this.authService.isLoggedIn;
+
+  onLogout() {
+    this.authService.logout();
+  }
 
   @HostListener('window:scroll', [])
   onWindowScroll() {
