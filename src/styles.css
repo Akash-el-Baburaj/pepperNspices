@@ -1,0 +1,80 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+@import 'tailwindcss';
+
+@theme {
+  --color-chili-50: #fdf2f2;
+  --color-chili-100: #fde8e8;
+  --color-chili-200: #fbd5d5;
+  --color-chili-300: #f8b4b4;
+  --color-chili-400: #f98080;
+  --color-chili-500: #e73624;
+  --color-chili-600: #c81e0e;
+  --color-chili-700: #9b1c1c;
+  --color-chili-800: #7f1d1d;
+  --color-chili-900: #4a0d0d;
+
+  --color-saffron-50: #fffbeb;
+  --color-saffron-100: #fef3c7;
+  --color-saffron-200: #fde68a;
+  --color-saffron-300: #fcd34d;
+  --color-saffron-400: #fbbf24;
+  --color-saffron-500: #d97706;
+  --color-saffron-600: #b45309;
+  --color-saffron-700: #78350f;
+  --color-saffron-800: #92400e;
+  --color-saffron-900: #451a03;
+
+  --color-cinnamon-50: #faf6f0;
+  --color-cinnamon-100: #f5ebe0;
+  --color-cinnamon-200: #efe3d3;
+  --color-cinnamon-300: #e2ccb2;
+  --color-cinnamon-400: #c4a482;
+  --color-cinnamon-500: #8a5237;
+  --color-cinnamon-600: #653b25;
+  --color-cinnamon-700: #451a03;
+  --color-cinnamon-800: #301000;
+  --color-cinnamon-900: #1b0800;
+
+  --color-peppercorn-50: #f8f8f7;
+  --color-peppercorn-100: #efeeeb;
+  --color-peppercorn-200: #dedcd5;
+  --color-peppercorn-300: #c2beba;
+  --color-peppercorn-400: #9f9b96;
+  --color-peppercorn-500: #7c7772;
+  --color-peppercorn-600: #5d5955;
+  --color-peppercorn-700: #44413e;
+  --color-peppercorn-800: #2e2e2a;
+  --color-peppercorn-900: #1e1e1c;
+  --color-peppercorn-950: #121211;
+
+  --font-display: "Cormorant Garamond", Georgia, serif;
+  --font-sans: "Plus Jakarta Sans", system-ui, sans-serif;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-cinnamon-50);
+  color: var(--color-peppercorn-900);
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+}
+
+/* Custom scrollbar matching spice tones */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-cinnamon-50);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-cinnamon-300);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-cinnamon-500);
+}
+
