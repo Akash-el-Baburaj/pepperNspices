@@ -11,28 +11,28 @@ import { MockAuthService } from '../../core/services/mock-auth.service';
   imports: [CommonModule, RouterLink, RouterLinkActive],
   template: `
     <header 
-      [class.py-3]="isScrolled()" 
-      [class.py-5]="!isScrolled()"
-      [class.bg-peppercorn-950/95]="isScrolled()" 
-      [class.backdrop-blur-md]="isScrolled()"
-      [class.shadow-md]="isScrolled()"
-      [class.bg-transparent]="!isScrolled()"
-      class="fixed top-0 left-0 w-full z-50 transition-all duration-300 border-b border-white/5"
+      [class.py-2]="isScrolled()" 
+      [class.py-4]="!isScrolled()"
+      [class.top-2]="isScrolled()"
+      [class.top-4]="!isScrolled()"
+      [class.bg-moss-900/85]="isScrolled()"
+      [class.bg-moss-950/50]="!isScrolled()"
+      [class.shadow-xl]="isScrolled()"
+      [class.shadow-md]="!isScrolled()"
+      class="fixed left-1/2 -translate-x-1/2 w-[94%] md:w-[90%] max-w-7xl z-50 transition-all duration-300 rounded-2xl md:rounded-3xl border border-white/10 backdrop-blur-md"
     >
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between">
           <!-- Logo -->
           <div class="flex-shrink-0">
             <a routerLink="/" class="flex items-center gap-2 group">
-              <!-- Saffron styled spice drop container -->
-              <span class="w-9 h-9 rounded-xl bg-chili-600 flex items-center justify-center shadow-lg group-hover:bg-saffron-500 transition-colors duration-300">
-                <svg class="w-5 h-5 text-white fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                  <path d="M12.4 2.3c-.2-.2-.5-.3-.8-.3-.3 0-.6.1-.8.3L3 10.1C1.8 11.3 1.1 13 1.1 14.8c0 3.7 3 6.7 6.7 6.7.7 0 1.4-.1 2-.4.4-.2.5-.7.3-1.1-.2-.4-.7-.5-1.1-.3-.4.2-.9.3-1.3.3-2.9 0-5.2-2.3-5.2-5.2 0-1.4.6-2.8 1.6-3.7l6.8-6.8c.2-.2.5-.2.7 0l6.8 6.8c1 1 1.6 2.3 1.6 3.7 0 2.9-2.3 5.2-5.2 5.2-.4 0-.9-.1-1.3-.3-.4-.2-.9-.1-1.1.3-.2.4-.1.9.3 1.1.7.3 1.3.4 2 .4 3.7 0 6.7-3 6.7-6.7 0-1.8-.7-3.5-1.9-4.7l-7.8-7.8z"/>
-                </svg>
+              <!-- Sasya logo emblem container -->
+              <span class="w-9 h-9 rounded-xl bg-white p-0.5 flex items-center justify-center shadow-lg overflow-hidden transition-transform duration-300 group-hover:scale-105">
+                <img src="/images/sasya-logo.png" alt="Sasya Logo" class="w-full h-full object-contain" />
               </span>
-              <div class="flex flex-col">
-                <span class="text-xl font-extrabold tracking-tight text-white leading-none">HALDI & HORN</span>
-                <span class="text-[9px] font-bold text-saffron-400 tracking-widest uppercase">Spice Merchants</span>
+              <div class="hidden sm:flex flex-col">
+                <span class="text-xl font-extrabold tracking-tight text-white leading-none font-display">SASYA</span>
+                <span class="text-[9px] font-bold text-saffron-400 tracking-widest uppercase font-sans">Organic Botanicals</span>
               </div>
             </a>
           </div>
@@ -209,7 +209,7 @@ import { MockAuthService } from '../../core/services/mock-auth.service';
 
       <!-- Mobile Dropdown Drawer -->
       @if (isMobileMenuOpen()) {
-        <div class="md:hidden bg-peppercorn-950 border-t border-white/5 px-4 pt-4 pb-6 space-y-3 shadow-xl">
+        <div class="md:hidden bg-moss-950/90 rounded-b-2xl border-t border-white/5 px-4 pt-4 pb-6 space-y-3 shadow-xl">
           <a routerLink="/" (click)="closeMobileMenu()" class="block text-sm font-bold text-gray-200 hover:text-saffron-400 py-2 border-b border-white/5">Home</a>
           
           <div>

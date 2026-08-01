@@ -15,7 +15,7 @@ import { CartService } from '../../core/services/cart.service';
         <!-- HEADER STEP INDICATOR -->
         @if (currentStep() < 4) {
           <div class="mb-10 text-center">
-            <h1 class="text-3xl font-extrabold font-display text-peppercorn-950">Haldi & Horn Checkout</h1>
+            <h1 class="text-3xl font-extrabold font-display text-peppercorn-950">Sasya Checkout</h1>
             
             <!-- Step Indicators -->
             <div class="flex items-center justify-center gap-4 mt-6 max-w-md mx-auto select-none">
@@ -188,8 +188,21 @@ import { CartService } from '../../core/services/cart.service';
               <div class="pt-4 border-t border-cinnamon-100 space-y-2 text-xs font-semibold text-peppercorn-600">
                 <div class="flex justify-between">
                   <span>Subtotal</span>
-                  <span>{{ subtotal() | currency }}</span>
+                  @if (promoDiscount() > 0) {
+                    <div class="space-x-1.5">
+                      <span class="line-through text-peppercorn-400 font-medium">{{ subtotal() | currency }}</span>
+                      <span class="font-bold text-peppercorn-900">{{ (subtotal() - promoDiscount()) | currency }}</span>
+                    </div>
+                  } @else {
+                    <span>{{ subtotal() | currency }}</span>
+                  }
                 </div>
+                @if (promoDiscount() > 0) {
+                  <div class="flex justify-between text-emerald-700 font-semibold">
+                    <span>Discount (25% off)</span>
+                    <span>- {{ promoDiscount() | currency }}</span>
+                  </div>
+                }
                 <div class="flex justify-between">
                   <span>Shipping</span>
                   <span>{{ shipping() === 0 ? 'FREE' : (shipping() | currency) }}</span>
@@ -202,6 +215,44 @@ import { CartService } from '../../core/services/cart.service';
                   <span>Grand Total</span>
                   <span>{{ total() | currency }}</span>
                 </div>
+              </div>
+
+              <!-- Promo Code Redeem Widget -->
+              <div class="mt-4">
+                @if (appliedPromo()) {
+                  <div class="flex items-center justify-between bg-emerald-50 border border-emerald-100 rounded-xl px-3 py-2 text-xs font-semibold text-emerald-800 animate-fade-in animate-scale-in">
+                    <div class="flex items-center gap-1.5">
+                      <span class="text-emerald-500">✓</span>
+                      <span>Promo <strong class="font-bold font-mono">{{ appliedPromo() }}</strong> applied!</span>
+                    </div>
+                    <button 
+                      (click)="removePromo()"
+                      class="text-emerald-600 hover:text-emerald-800 font-extrabold px-1 rounded hover:bg-emerald-100/50 transition-colors"
+                      title="Remove code"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                } @else {
+                  <div class="flex gap-2">
+                    <input 
+                      type="text" 
+                      [(ngModel)]="promoInput" 
+                      placeholder="Have a promo code?" 
+                      class="w-full text-xs font-semibold px-3 py-2 bg-white border border-cinnamon-100 rounded-xl focus:outline-none focus:border-moss-500 uppercase font-mono"
+                      (keyup.enter)="applyPromo()"
+                    />
+                    <button 
+                      (click)="applyPromo()"
+                      class="px-4 py-2 bg-moss-700 hover:bg-moss-600 text-white text-xs font-extrabold rounded-xl transition-all hover:scale-102"
+                    >
+                      Apply
+                    </button>
+                  </div>
+                  @if (promoError()) {
+                    <p class="text-[10px] text-chili-600 font-semibold leading-none mt-1">{{ promoError() }}</p>
+                  }
+                }
               </div>
 
               <div class="pt-4 flex justify-between">
@@ -227,18 +278,24 @@ import { CartService } from '../../core/services/cart.service';
                 </p>
               </div>
 
-              <div class="max-w-xs mx-auto p-4 bg-cinnamon-50 border border-cinnamon-100 rounded-2xl text-left space-y-1.5 text-xs font-semibold">
+              <div class="max-w-xs mx-auto p-4 bg-cinnamon-50 border border-cinnamon-100 rounded-2xl text-left space-y-1.5 text-xs font-semibold animate-fade-in">
                 <div class="flex justify-between">
                   <span class="text-peppercorn-400">Order ID</span>
-                  <span class="text-peppercorn-900 font-mono">#H-H-82937-26</span>
+                  <span class="text-peppercorn-900 font-mono">#SASYA-82937-26</span>
                 </div>
-                <div class="flex justify-between">
-                  <span class="text-peppercorn-400">Courier method</span>
-                  <span class="text-peppercorn-900">Standard Estate Ground</span>
-                </div>
+                @if (finalAppliedPromo) {
+                  <div class="flex justify-between text-emerald-700">
+                    <span>Promo Applied</span>
+                    <span>{{ finalAppliedPromo }} (25% off)</span>
+                  </div>
+                }
                 <div class="flex justify-between">
                   <span class="text-peppercorn-400">Recipient</span>
                   <span class="text-peppercorn-900 truncate max-w-[120px]">{{ shippingData.firstName }} {{ shippingData.lastName }}</span>
+                </div>
+                <div class="flex justify-between pt-1.5 border-t border-cinnamon-100">
+                  <span class="text-peppercorn-950 font-bold">Total Paid</span>
+                  <span class="text-peppercorn-950 font-extrabold">{{ finalTotalPaid | currency }}</span>
                 </div>
               </div>
 
@@ -269,6 +326,14 @@ export class CheckoutComponent {
   protected readonly tax = this.cartService.cartTax;
   protected readonly shipping = this.cartService.cartShipping;
   protected readonly total = this.cartService.cartTotal;
+  protected readonly appliedPromo = this.cartService.appliedPromo;
+  protected readonly promoDiscount = this.cartService.promoDiscount;
+
+  protected finalTotalPaid = 0;
+  protected finalAppliedPromo = '';
+
+  protected promoInput = '';
+  protected promoError = signal<string | null>(null);
 
   protected shippingData = {
     firstName: '',
@@ -317,8 +382,79 @@ export class CheckoutComponent {
   }
 
   placeOrder() {
+    // Capture final summary details before clearing cart signals
+    this.finalTotalPaid = this.total();
+    this.finalAppliedPromo = this.cartService.appliedPromo() || '';
+
     // Clear shopping cart state and transition to final summary
     this.cartService.clearCart();
     this.currentStep.set(4);
+    this.triggerSuccessConfetti();
+  }
+
+  applyPromo() {
+    this.promoError.set(null);
+    if (!this.promoInput.trim()) {
+      this.promoError.set('Please enter a promo code');
+      return;
+    }
+    const success = this.cartService.applyPromo(this.promoInput);
+    if (success) {
+      this.promoInput = '';
+      this.triggerLocalConfetti();
+    } else {
+      this.promoError.set('Invalid or expired code');
+    }
+  }
+
+  removePromo() {
+    this.cartService.removePromo();
+    this.promoError.set(null);
+  }
+
+  private triggerLocalConfetti() {
+    if (typeof window !== 'undefined') {
+      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (prefersReduced) return;
+      
+      import('canvas-confetti').then(module => {
+        const confetti = module.default;
+        confetti({
+          particleCount: 45,
+          spread: 50,
+          origin: { y: 0.65, x: 0.6 }, // localized near center area
+          colors: ['#1e3f1e', '#adb8a6', '#fbbf24', '#e73624']
+        });
+      });
+    }
+  }
+
+  private triggerSuccessConfetti() {
+    if (typeof window !== 'undefined') {
+      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (prefersReduced) return;
+
+      import('canvas-confetti').then(module => {
+        const confetti = module.default;
+        
+        // Left side burst
+        confetti({
+          particleCount: 80,
+          angle: 60,
+          spread: 55,
+          origin: { x: 0, y: 0.8 },
+          colors: ['#1e3f1e', '#adb8a6', '#fbbf24', '#e73624']
+        });
+        
+        // Right side burst
+        confetti({
+          particleCount: 80,
+          angle: 120,
+          spread: 55,
+          origin: { x: 1, y: 0.8 },
+          colors: ['#1e3f1e', '#adb8a6', '#fbbf24', '#e73624']
+        });
+      });
+    }
   }
 }

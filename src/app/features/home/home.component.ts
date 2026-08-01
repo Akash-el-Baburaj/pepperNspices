@@ -19,15 +19,15 @@ import { ProductCardComponent } from '../../shared/components/product-card.compo
         <!-- Parallax Background Image -->
         <div 
           [appParallax]="-0.3"
-          class="absolute inset-0 w-full h-[120%] -top-[10%] bg-cover bg-center opacity-40 mix-blend-luminosity"
-          style="background-image: url('/images/spices-hero-bg.png');"
+          class="absolute inset-0 w-full h-[120%] -top-[10%] bg-cover bg-center opacity-30 mix-blend-normal"
+          style="background-image: url('/images/spices-herbs-hero-bg.png');"
         ></div>
 
         <!-- Canvas Spice Particles Background -->
         <canvas #canvas class="absolute inset-0 pointer-events-none z-10 w-full h-full opacity-60"></canvas>
 
         <!-- Warm Gradient Overlay -->
-        <div class="absolute inset-0 bg-gradient-to-t from-peppercorn-950 via-peppercorn-950/30 to-peppercorn-950/20 z-0"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-moss-950 via-moss-950/40 to-moss-950/20 z-0"></div>
 
         <!-- Foreground Content -->
         <div class="relative z-20 max-w-5xl mx-auto px-4 text-center space-y-6">
@@ -44,7 +44,7 @@ import { ProductCardComponent } from '../../shared/components/product-card.compo
           <div class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
             <a 
               routerLink="/shop" 
-              class="w-full sm:w-auto px-8 py-4 bg-chili-600 hover:bg-chili-500 text-white font-bold text-sm rounded-2xl shadow-xl hover:shadow-chili-600/20 transition-all duration-300 hover:scale-105 active:scale-95 text-center"
+              class="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-moss-700 to-moss-600 hover:from-saffron-600 hover:to-saffron-500 text-white font-extrabold text-sm rounded-2xl shadow-xl transition-all duration-300 hover:scale-105 active:scale-95 text-center"
             >
               Explore Shop
             </a>
@@ -181,7 +181,7 @@ import { ProductCardComponent } from '../../shared/components/product-card.compo
                     <span class="text-xs text-saffron-400 font-bold tracking-widest uppercase block">KAMPOT STATE</span>
                     <span class="text-[9px] text-gray-400 block mt-1">CULTIVATED SINCE 13TH CENTURY</span>
                   </div>
-                  <span class="text-[10px] text-white/20 tracking-wider">HALDI & HORN IMPORTERS</span>
+                  <span class="text-[10px] text-white/20 tracking-wider">SASYA BOTANICAL VAULTS</span>
                 </div>
               </div>
 
@@ -288,7 +288,7 @@ import { ProductCardComponent } from '../../shared/components/product-card.compo
             <div class="flex items-center justify-center gap-4 mt-8">
               <button 
                 (click)="prevTestimonial()"
-                class="w-10 h-10 rounded-full border border-cinnamon-200 text-peppercorn-600 hover:bg-chili-600 hover:text-white hover:border-chili-600 flex items-center justify-center transition-all duration-200"
+                class="w-10 h-10 rounded-full border border-sage-200 text-peppercorn-600 hover:bg-moss-600 hover:text-white hover:border-moss-600 flex items-center justify-center transition-all duration-200"
               >
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"></path>
@@ -298,16 +298,16 @@ import { ProductCardComponent } from '../../shared/components/product-card.compo
                 @for (test of testimonials(); track test.id; let idx = $index) {
                   <button 
                     (click)="setTestimonial(idx)"
-                    [class.bg-chili-600]="idx === activeTestimonialIndex()"
+                    [class.bg-moss-600]="idx === activeTestimonialIndex()"
                     [class.scale-125]="idx === activeTestimonialIndex()"
-                    [class.bg-cinnamon-250]="idx !== activeTestimonialIndex()"
+                    [class.bg-sage-200]="idx !== activeTestimonialIndex()"
                     class="w-2.5 h-2.5 rounded-full transition-all duration-300"
                   ></button>
                 }
               </div>
               <button 
                 (click)="nextTestimonial()"
-                class="w-10 h-10 rounded-full border border-cinnamon-200 text-peppercorn-600 hover:bg-chili-600 hover:text-white hover:border-chili-600 flex items-center justify-center transition-all duration-200"
+                class="w-10 h-10 rounded-full border border-sage-200 text-peppercorn-600 hover:bg-moss-600 hover:text-white hover:border-moss-600 flex items-center justify-center transition-all duration-200"
               >
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"></path>
@@ -320,14 +320,14 @@ import { ProductCardComponent } from '../../shared/components/product-card.compo
       </section>
 
       <!-- NEWSLETTER BANNER -->
-      <section class="relative py-24 bg-chili-900 overflow-hidden text-center text-white">
+      <section class="relative py-24 bg-moss-900 overflow-hidden text-center text-white">
         <!-- Background organic textures -->
-        <div class="absolute inset-0 bg-cover bg-center opacity-10 mix-blend-overlay" style="background-image: url('/images/spices-hero-bg.png');"></div>
+        <div class="absolute inset-0 bg-cover bg-center opacity-15 mix-blend-overlay" style="background-image: url('/images/spices-herbs-hero-bg.png');"></div>
         
         <div class="relative z-10 max-w-xl mx-auto px-4 space-y-6">
           <span class="text-xs font-extrabold text-saffron-400 uppercase tracking-widest block">Harvest Club</span>
           <h2 class="text-3xl md:text-5xl font-bold font-display leading-tight">Taste the Seasons First</h2>
-          <p class="text-xs md:text-sm text-chili-100 max-w-md mx-auto leading-relaxed">
+          <p class="text-xs md:text-sm text-sage-100 max-w-md mx-auto leading-relaxed">
             Subscribe to our seasonal harvest drops, private kitchen releases, and 10% off your first single-origin spice package.
           </p>
 
@@ -345,7 +345,7 @@ import { ProductCardComponent } from '../../shared/components/product-card.compo
               />
               <button 
                 type="submit" 
-                class="px-8 py-4 bg-saffron-500 hover:bg-saffron-400 text-white font-bold text-sm rounded-2xl shadow-lg transition-all duration-200 hover:scale-105 active:scale-95"
+                class="px-8 py-4 bg-chili-600 hover:bg-chili-500 text-white font-bold text-sm rounded-2xl shadow-lg transition-all duration-200 hover:scale-105 active:scale-95"
               >
                 Subscribe
               </button>
@@ -415,10 +415,10 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
     const flakes: Flake[] = [];
     const colors = [
-      '#e73624', // Chili red
-      '#9b1c1c', // Terracotta
-      '#d97706', // Saffron gold
-      '#653b25', // Cinnamon brown
+      '#e73624', // Chili red (vibrant accent)
+      '#4a7848', // Moss green (dominant)
+      '#74a174', // Leaf green (dominant)
+      '#d97706', // Saffron gold (vibrant accent)
       '#1e1e1c', // Black pepper
     ];
 

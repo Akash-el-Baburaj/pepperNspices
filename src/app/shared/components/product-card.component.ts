@@ -17,14 +17,14 @@ import { TiltDirective } from '../directives/tilt.directive';
       <div 
         [appTilt]="6" 
         [scale]="1.03"
-        class="group relative flex flex-col justify-between overflow-hidden border-torn-card bg-parchment border border-cinnamon-200/60 shadow-sm hover:shadow-lg transition-all duration-300 h-full"
+        class="group relative flex flex-col justify-between overflow-hidden border-torn-card bg-sage-50/70 hover:bg-sage-100/50 border border-sage-200/40 shadow-sm hover:shadow-lg transition-all duration-300 h-full"
       >
         <!-- Badge tags -->
         @if (product().tags.length > 0) {
           <div class="absolute top-3 left-3 z-10 flex flex-wrap gap-1">
             @for (tag of product().tags.slice(0, 2); track tag) {
-              <span class="text-[9px] font-extrabold uppercase tracking-wider text-cinnamon-850 bg-burlap label-badge border border-cinnamon-250/40 px-2.5 py-0.5">
-                {{ tag }}
+              <span class="text-[9px] font-extrabold uppercase tracking-wider text-moss-700 bg-sage-100/90 label-badge border border-sage-200 px-2.5 py-1.5 flex items-center gap-1">
+                🌿 {{ tag }}
               </span>
             }
           </div>
@@ -80,11 +80,13 @@ import { TiltDirective } from '../directives/tilt.directive';
 
             <button 
               (click)="onAddToCart($event)"
-              [class.bg-emerald-600]="isAdded()"
-              [class.hover:bg-emerald-700]="isAdded()"
-              [class.bg-chili-600]="!isAdded()"
-              [class.hover:bg-chili-700]="!isAdded()"
-              class="relative flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl text-white text-xs font-bold shadow-xs transition-all duration-300 hover:scale-105 active:scale-95 overflow-hidden"
+              [class.bg-moss-500]="isAdded()"
+              [class.bg-gradient-to-r]="!isAdded()"
+              [class.from-moss-700]="!isAdded()"
+              [class.to-moss-600]="!isAdded()"
+              [class.hover:from-saffron-600]="!isAdded()"
+              [class.hover:to-saffron-500]="!isAdded()"
+              class="relative flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl text-white text-xs font-bold shadow-xs transition-all duration-300 hover:scale-105 active:scale-95 overflow-hidden"
             >
               @if (isAdded()) {
                 <svg class="w-3.5 h-3.5 animate-bounce" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
@@ -103,7 +105,7 @@ import { TiltDirective } from '../directives/tilt.directive';
       </div>
     } @else {
       <!-- LIST VIEW MODE -->
-      <div class="flex flex-col md:flex-row gap-6 p-4 md:p-6 border-torn-card bg-parchment border border-cinnamon-200/60 shadow-sm hover:shadow-lg transition-all duration-300 w-full">
+      <div class="flex flex-col md:flex-row gap-6 p-4 md:p-6 border-torn-card bg-sage-50/70 hover:bg-sage-100/50 border border-sage-200/40 shadow-sm hover:shadow-lg transition-all duration-300 w-full">
         <!-- Image container -->
         <div 
           [routerLink]="['/product', product().id]"
@@ -116,8 +118,8 @@ import { TiltDirective } from '../directives/tilt.directive';
             loading="lazy"
           />
           @if (product().tags.length > 0) {
-            <span class="absolute top-2 left-2 text-[9px] font-extrabold uppercase tracking-wider text-cinnamon-850 bg-burlap label-badge border border-cinnamon-250/40 px-2.5 py-0.5">
-              {{ product().tags[0] }}
+            <span class="absolute top-2 left-2 text-[9px] font-extrabold uppercase tracking-wider text-moss-700 bg-sage-100/90 label-badge border border-sage-200 px-2 py-0.5 flex items-center gap-1">
+              🌿 {{ product().tags[0] }}
             </span>
           }
         </div>
@@ -156,10 +158,12 @@ import { TiltDirective } from '../directives/tilt.directive';
 
             <button 
               (click)="onAddToCart($event)"
-              [class.bg-emerald-600]="isAdded()"
-              [class.hover:bg-emerald-700]="isAdded()"
-              [class.bg-chili-600]="!isAdded()"
-              [class.hover:bg-chili-700]="!isAdded()"
+              [class.bg-moss-500]="isAdded()"
+              [class.bg-gradient-to-r]="!isAdded()"
+              [class.from-moss-700]="!isAdded()"
+              [class.to-moss-600]="!isAdded()"
+              [class.hover:from-saffron-600]="!isAdded()"
+              [class.hover:to-saffron-500]="!isAdded()"
               class="flex items-center justify-center gap-1.5 px-6 py-2.5 rounded-xl text-white text-xs font-bold shadow-xs transition-all duration-300 hover:scale-105 active:scale-95"
             >
               @if (isAdded()) {

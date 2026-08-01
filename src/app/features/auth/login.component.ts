@@ -18,13 +18,13 @@ import { MockAuthService } from '../../core/services/mock-auth.service';
           <!-- LEFT COLUMN: IMAGE BRAND BOARD -->
           <div class="relative hidden md:block bg-peppercorn-950 overflow-hidden select-none">
             <div 
-              class="absolute inset-0 bg-cover bg-center opacity-30 mix-blend-luminosity scale-105"
-              style="background-image: url('/images/spices-hero-bg.png');"
+              class="absolute inset-0 bg-cover bg-center opacity-30 mix-blend-normal scale-105"
+              style="background-image: url('/images/spices-herbs-hero-bg.png');"
             ></div>
             <div class="absolute inset-0 bg-gradient-to-t from-peppercorn-950 via-peppercorn-950/30 to-transparent"></div>
             
             <div class="absolute inset-0 p-10 flex flex-col justify-between text-white z-10">
-              <span class="text-xs font-extrabold uppercase tracking-widest text-saffron-400">Haldi & Horn</span>
+              <span class="text-xs font-extrabold uppercase tracking-widest text-saffron-400">Sasya</span>
               
               <div class="space-y-4">
                 <h2 class="text-3xl font-bold font-display leading-tight">Welcome Back, Chef</h2>
@@ -127,7 +127,7 @@ import { MockAuthService } from '../../core/services/mock-auth.service';
 
             <!-- Signup footer link -->
             <p class="text-xs text-peppercorn-500 font-medium text-center mt-6">
-              New to Haldi & Horn? 
+              New to Sasya? 
               <a routerLink="/register" class="font-bold text-chili-600 hover:text-chili-700 underline">Create account</a>.
             </p>
           </div>

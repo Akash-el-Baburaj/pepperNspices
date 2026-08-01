@@ -1,12 +1,13 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { CartService } from '../../core/services/cart.service';
 
 @Component({
   selector: 'app-cart',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, FormsModule],
   template: `
     <div class="min-h-screen bg-cinnamon-50 pt-32 pb-24">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -101,8 +102,23 @@ import { CartService } from '../../core/services/cart.service';
                 <div class="space-y-2.5 text-xs text-peppercorn-600 font-medium">
                   <div class="flex items-center justify-between">
                     <span>Subtotal</span>
-                    <span class="font-bold text-peppercorn-900">{{ subtotal() | currency }}</span>
+                    @if (promoDiscount() > 0) {
+                      <div class="space-x-1.5">
+                        <span class="line-through text-peppercorn-400 font-medium">{{ subtotal() | currency }}</span>
+                        <span class="font-bold text-peppercorn-900">{{ (subtotal() - promoDiscount()) | currency }}</span>
+                      </div>
+                    } @else {
+                      <span class="font-bold text-peppercorn-900">{{ subtotal() | currency }}</span>
+                    }
                   </div>
+
+                  @if (promoDiscount() > 0) {
+                    <div class="flex items-center justify-between text-emerald-700 font-semibold">
+                      <span>Discount (25% off)</span>
+                      <span class="font-bold">- {{ promoDiscount() | currency }}</span>
+                    </div>
+                  }
+
                   <div class="flex items-center justify-between">
                     <span>Est. Tax (8%)</span>
                     <span class="font-bold text-peppercorn-900">{{ tax() | currency }}</span>
@@ -123,7 +139,47 @@ import { CartService } from '../../core/services/cart.service';
                   }
                 </div>
 
-                <div class="pt-4 border-t border-cinnamon-50 flex items-center justify-between">
+                <!-- Promo Code Widget -->
+                <div class="pt-4 border-t border-cinnamon-100 space-y-2">
+                  <span class="text-[10px] font-extrabold uppercase tracking-widest text-peppercorn-400 block">Promo Code</span>
+                  
+                  @if (appliedPromo()) {
+                    <div class="flex items-center justify-between bg-emerald-50 border border-emerald-100 rounded-xl px-3 py-2 text-xs font-semibold text-emerald-800 animate-fade-in">
+                      <div class="flex items-center gap-1.5">
+                        <span class="text-emerald-500">✓</span>
+                        <span>Code <strong class="font-bold font-mono">{{ appliedPromo() }}</strong> applied!</span>
+                      </div>
+                      <button 
+                        (click)="removePromo()"
+                        class="text-emerald-600 hover:text-emerald-800 font-extrabold px-1 rounded hover:bg-emerald-100/50 transition-colors"
+                        title="Remove code"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  } @else {
+                    <div class="flex gap-2">
+                      <input 
+                        type="text" 
+                        [(ngModel)]="promoInput" 
+                        placeholder="Have a promo code?" 
+                        class="w-full text-xs font-semibold px-3 py-2 bg-cinnamon-50/50 border border-cinnamon-100 rounded-xl focus:outline-none focus:border-moss-500 uppercase font-mono"
+                        (keyup.enter)="applyPromo()"
+                      />
+                      <button 
+                        (click)="applyPromo()"
+                        class="px-4 py-2 bg-moss-700 hover:bg-moss-600 text-white text-xs font-extrabold rounded-xl transition-all hover:scale-102"
+                      >
+                        Apply
+                      </button>
+                    </div>
+                    @if (promoError()) {
+                      <p class="text-[10px] text-chili-600 font-semibold leading-none">{{ promoError() }}</p>
+                    }
+                  }
+                </div>
+
+                <div class="pt-4 border-t border-cinnamon-100 flex items-center justify-between">
                   <span class="text-sm font-extrabold text-peppercorn-950 uppercase tracking-wider">Total</span>
                   <span class="text-xl font-extrabold text-peppercorn-950">{{ total() | currency }}</span>
                 </div>
@@ -138,7 +194,7 @@ import { CartService } from '../../core/services/cart.service';
 
               <!-- Trust banner details -->
               <div class="p-4 rounded-2xl bg-cinnamon-100/50 border border-cinnamon-150 text-center text-[10px] text-peppercorn-500 font-bold leading-relaxed uppercase tracking-wider">
-                🔒 Secured transaction by haldi & horn import vaults
+                🔒 Secured transaction by Sasya Botanical Vaults
               </div>
             </div>
 
@@ -157,6 +213,11 @@ export class CartComponent {
   protected readonly tax = this.cartService.cartTax;
   protected readonly shipping = this.cartService.cartShipping;
   protected readonly total = this.cartService.cartTotal;
+  protected readonly appliedPromo = this.cartService.appliedPromo;
+  protected readonly promoDiscount = this.cartService.promoDiscount;
+
+  protected promoInput = '';
+  protected promoError = signal<string | null>(null);
 
   updateQty(productId: string, quantity: number) {
     this.cartService.updateQuantity(productId, quantity);
@@ -164,5 +225,42 @@ export class CartComponent {
 
   removeItem(productId: string) {
     this.cartService.removeFromCart(productId);
+  }
+
+  applyPromo() {
+    this.promoError.set(null);
+    if (!this.promoInput.trim()) {
+      this.promoError.set('Please enter a promo code');
+      return;
+    }
+    const success = this.cartService.applyPromo(this.promoInput);
+    if (success) {
+      this.promoInput = '';
+      this.triggerConfetti();
+    } else {
+      this.promoError.set('Invalid or expired code');
+    }
+  }
+
+  removePromo() {
+    this.cartService.removePromo();
+    this.promoError.set(null);
+  }
+
+  private triggerConfetti() {
+    if (typeof window !== 'undefined') {
+      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (prefersReduced) return;
+      
+      import('canvas-confetti').then(module => {
+        const confetti = module.default;
+        confetti({
+          particleCount: 50,
+          spread: 60,
+          origin: { y: 0.7, x: 0.85 }, // localized for bottom-right summary section
+          colors: ['#1e3f1e', '#adb8a6', '#fbbf24', '#e73624']
+        });
+      });
+    }
   }
 }

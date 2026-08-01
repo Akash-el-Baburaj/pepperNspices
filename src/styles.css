@@ -25,16 +25,17 @@
   --color-saffron-800: #92400e;
   --color-saffron-900: #451a03;
 
-  --color-cinnamon-50: #faf6f0;
-  --color-cinnamon-100: #f5ebe0;
-  --color-cinnamon-200: #efe3d3;
-  --color-cinnamon-300: #e2ccb2;
-  --color-cinnamon-400: #c4a482;
-  --color-cinnamon-500: #8a5237;
-  --color-cinnamon-600: #653b25;
-  --color-cinnamon-700: #451a03;
-  --color-cinnamon-800: #301000;
-  --color-cinnamon-900: #1b0800;
+  --color-cinnamon-50: var(--color-sage-50);
+  --color-cinnamon-100: var(--color-sage-100);
+  --color-cinnamon-200: var(--color-sage-200);
+  --color-cinnamon-300: var(--color-sage-300);
+  --color-cinnamon-400: var(--color-sage-400);
+  --color-cinnamon-500: var(--color-moss-500);
+  --color-cinnamon-600: var(--color-moss-600);
+  --color-cinnamon-700: var(--color-moss-700);
+  --color-cinnamon-800: var(--color-moss-800);
+  --color-cinnamon-900: var(--color-moss-900);
+
 
   --color-peppercorn-50: #f8f8f7;
   --color-peppercorn-100: #efeeeb;
@@ -48,13 +49,36 @@
   --color-peppercorn-900: #1e1e1c;
   --color-peppercorn-950: #121211;
 
+  --color-moss-50: #f2f7f2;
+  --color-moss-100: #e3ede3;
+  --color-moss-200: #c9dbc9;
+  --color-moss-300: #a2c2a2;
+  --color-moss-400: #74a174;
+  --color-moss-500: #4a7848;
+  --color-moss-600: #3b5e39;
+  --color-moss-700: #2d472c;
+  --color-moss-800: #1f301e;
+  --color-moss-900: #121c12;
+  --color-moss-950: #0a110a;
+
+  --color-sage-50: #f5f6f4;
+  --color-sage-100: #e7eae4;
+  --color-sage-200: #ced5c9;
+  --color-sage-300: #adb8a6;
+  --color-sage-400: #8c9c84;
+  --color-sage-500: #6b7d63;
+  --color-sage-600: #54624e;
+  --color-sage-700: #404b3c;
+  --color-sage-800: #2c3329;
+  --color-sage-900: #1a1e18;
+
   --font-display: "Cormorant Garamond", Georgia, serif;
   --font-sans: "Plus Jakarta Sans", system-ui, sans-serif;
 }
 
 body {
   font-family: var(--font-sans);
-  background-color: var(--color-cinnamon-50);
+  background-color: var(--color-sage-50);
   color: var(--color-peppercorn-900);
   overflow-x: hidden;
 }
@@ -68,17 +92,23 @@ h1, h2, h3, h4, h5, h6 {
   width: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--color-cinnamon-50);
+  background: var(--color-sage-50);
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--color-cinnamon-300);
+  background: var(--color-sage-200);
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-cinnamon-500);
+  background: var(--color-moss-500);
 }
 
-/* Organic utilities for Haldi & Horn */
+@utility bg-glass-nav {
+  background-color: rgba(19, 31, 19, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* Organic utilities for Sasya */
 @utility bg-kraft-paper {
   background-color: #f5ebe0;
   background-image: 

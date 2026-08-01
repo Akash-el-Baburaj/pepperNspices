@@ -18,16 +18,16 @@ interface MapPin {
   standalone: true,
   imports: [CommonModule, RouterModule, ParallaxDirective, TiltDirective],
   template: `
-    <div class="relative w-full overflow-hidden bg-cinnamon-50">
+    <div class="relative w-full overflow-hidden bg-sage-50">
       
       <!-- HERO PARALLAX HEADER -->
-      <section class="relative h-[60vh] flex items-center justify-center overflow-hidden bg-peppercorn-950">
+      <section class="relative h-[60vh] flex items-center justify-center overflow-hidden bg-moss-950">
         <div 
           [appParallax]="-0.25"
-          class="absolute inset-0 w-full h-[120%] -top-[10%] bg-cover bg-center opacity-30 mix-blend-luminosity"
-          style="background-image: url('/images/spices-hero-bg.png');"
+          class="absolute inset-0 w-full h-[120%] -top-[10%] bg-cover bg-center opacity-30 mix-blend-normal"
+          style="background-image: url('/images/spices-herbs-hero-bg.png');"
         ></div>
-        <div class="absolute inset-0 bg-gradient-to-t from-cinnamon-50 via-peppercorn-950/40 to-peppercorn-950/20"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-sage-50 via-moss-950/40 to-moss-950/20"></div>
 
         <div class="relative z-20 text-center space-y-4 max-w-3xl mx-auto px-4 mt-12">
           <span class="text-xs font-extrabold text-saffron-400 uppercase tracking-widest block">Our Roots</span>
@@ -35,28 +35,28 @@ interface MapPin {
             Crafting Taste <br class="hidden md:inline"/>
             Across Latitudes
           </h1>
-          <div class="w-12 h-1 bg-chili-600 mx-auto rounded-full"></div>
+          <div class="w-12 h-1 bg-moss-500 mx-auto rounded-full"></div>
         </div>
       </section>
 
       <!-- FARM-TO-TABLE JOURNEY -->
       <section class="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center max-w-xl mx-auto mb-20">
-          <span class="text-xs font-extrabold text-chili-600 uppercase tracking-widest">Our Method</span>
+          <span class="text-xs font-extrabold text-moss-700 uppercase tracking-widest">Our Method</span>
           <h2 class="text-3xl md:text-4xl font-bold text-peppercorn-950 font-display mt-2">The Farm-To-Table Path</h2>
           <p class="text-xs text-peppercorn-500 mt-2 font-medium">How we preserve the volatile oils, coloring properties, and tasting complexities.</p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-12 relative">
           <!-- Connective background line -->
-          <div class="hidden md:block absolute top-[28%] left-[10%] right-[10%] h-0.5 bg-cinnamon-150 z-0"></div>
+          <div class="hidden md:block absolute top-[28%] left-[10%] right-[10%] h-0.5 bg-sage-200 z-0"></div>
 
           <!-- Step 1 -->
-          <div [appTilt]="4" [scale]="1.01" class="relative z-10 text-center space-y-4 group bg-white border border-cinnamon-100 p-6 rounded-2xl shadow-xs transition-all">
-            <span class="w-14 h-14 mx-auto rounded-2xl bg-cinnamon-50 border border-cinnamon-100 flex items-center justify-center text-xl shadow-xs group-hover:bg-chili-600 group-hover:text-white transition-all duration-300">
+          <div [appTilt]="4" [scale]="1.01" class="relative z-10 text-center space-y-4 group border-torn-card bg-sage-50/70 hover:bg-sage-100/50 border border-sage-200/60 p-6 shadow-xs transition-all">
+            <span class="w-14 h-14 mx-auto border-torn bg-white border border-sage-200 flex items-center justify-center text-xl shadow-xs group-hover:bg-moss-600 group-hover:text-white transition-all duration-300">
               👩‍🌾
             </span>
-            <span class="text-[10px] font-extrabold text-chili-600 uppercase tracking-widest block">Phase 01</span>
+            <span class="text-[10px] font-extrabold text-moss-700 uppercase tracking-widest block">Phase 01</span>
             <h3 class="text-lg font-bold text-peppercorn-950 font-display">Ethical Cultivation</h3>
             <p class="text-xs text-peppercorn-600 leading-relaxed font-medium">
               We partner directly with family estates. Spices are organically grown without artificial inputs and harvested by hand at full physiological maturity.
@@ -64,11 +64,11 @@ interface MapPin {
           </div>
 
           <!-- Step 2 -->
-          <div [appTilt]="4" [scale]="1.01" class="relative z-10 text-center space-y-4 group bg-white border border-cinnamon-100 p-6 rounded-2xl shadow-xs transition-all">
-            <span class="w-14 h-14 mx-auto rounded-2xl bg-cinnamon-50 border border-cinnamon-100 flex items-center justify-center text-xl shadow-xs group-hover:bg-chili-600 group-hover:text-white transition-all duration-300">
+          <div [appTilt]="4" [scale]="1.01" class="relative z-10 text-center space-y-4 group border-torn-card bg-sage-50/70 hover:bg-sage-100/50 border border-sage-200/60 p-6 shadow-xs transition-all">
+            <span class="w-14 h-14 mx-auto border-torn bg-white border border-sage-200 flex items-center justify-center text-xl shadow-xs group-hover:bg-moss-600 group-hover:text-white transition-all duration-300">
               ☀️
             </span>
-            <span class="text-[10px] font-extrabold text-chili-600 uppercase tracking-widest block">Phase 02</span>
+            <span class="text-[10px] font-extrabold text-moss-700 uppercase tracking-widest block">Phase 02</span>
             <h3 class="text-lg font-bold text-peppercorn-950 font-display">Gentle Curing</h3>
             <p class="text-xs text-peppercorn-600 leading-relaxed font-medium">
               Instead of high-heat industrial ovens that destroy essential flavors, our spices are dried in shading beds or sun-cured naturally to lock in character.
@@ -76,11 +76,11 @@ interface MapPin {
           </div>
 
           <!-- Step 3 -->
-          <div [appTilt]="4" [scale]="1.01" class="relative z-10 text-center space-y-4 group bg-white border border-cinnamon-100 p-6 rounded-2xl shadow-xs transition-all">
-            <span class="w-14 h-14 mx-auto rounded-2xl bg-cinnamon-50 border border-cinnamon-100 flex items-center justify-center text-xl shadow-xs group-hover:bg-chili-600 group-hover:text-white transition-all duration-300">
+          <div [appTilt]="4" [scale]="1.01" class="relative z-10 text-center space-y-4 group border-torn-card bg-sage-50/70 hover:bg-sage-100/50 border border-sage-200/60 p-6 shadow-xs transition-all">
+            <span class="w-14 h-14 mx-auto border-torn bg-white border border-sage-200 flex items-center justify-center text-xl shadow-xs group-hover:bg-moss-600 group-hover:text-white transition-all duration-300">
               🏺
             </span>
-            <span class="text-[10px] font-extrabold text-chili-600 uppercase tracking-widest block">Phase 03</span>
+            <span class="text-[10px] font-extrabold text-moss-700 uppercase tracking-widest block">Phase 03</span>
             <h3 class="text-lg font-bold text-peppercorn-950 font-display">Batch Stone-Grinding</h3>
             <p class="text-xs text-peppercorn-600 leading-relaxed font-medium">
               We stone-grind in small batches weekly and pack immediately in glass. Minimizing friction heat keeps delicate spice essences completely intact.
@@ -90,7 +90,7 @@ interface MapPin {
       </section>
 
       <!-- INTERACTIVE MAP SECTION -->
-      <section class="py-24 bg-peppercorn-950 text-white border-y border-cinnamon-950">
+      <section class="py-24 bg-moss-950 text-white border-y border-moss-900">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div class="text-center max-w-xl mx-auto mb-16">
             <span class="text-xs font-extrabold text-saffron-400 uppercase tracking-widest">Sourcing Origin</span>
@@ -100,7 +100,7 @@ interface MapPin {
 
           <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             <!-- Left map graphic column -->
-            <div class="lg:col-span-8 relative aspect-[16/9] w-full bg-peppercorn-900 border border-white/5 rounded-3xl overflow-hidden shadow-2xl p-6 select-none">
+            <div class="lg:col-span-8 relative aspect-[16/9] w-full bg-moss-900/60 border border-moss-800 rounded-3xl overflow-hidden shadow-2xl p-6 select-none">
               <!-- World map vector line background placeholder using CSS stylized paths -->
               <div class="absolute inset-0 bg-cover bg-center opacity-10 pointer-events-none" style="background-image: url('https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80&w=1200');"></div>
               
@@ -118,9 +118,9 @@ interface MapPin {
                   [style.left.%]="pin.x"
                   [style.top.%]="pin.y"
                   [class.scale-125]="activePin().id === pin.id"
-                  [class.bg-chili-600]="activePin().id === pin.id"
-                  [class.bg-saffron-500]="activePin().id !== pin.id"
-                  class="absolute w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-extrabold text-white border-2 border-peppercorn-950 shadow-lg cursor-pointer transform -translate-x-1/2 -translate-y-1/2 hover:scale-125 transition-all duration-300 hover:bg-chili-600"
+                  [class.bg-saffron-500]="activePin().id === pin.id"
+                  [class.bg-moss-500]="activePin().id !== pin.id"
+                  class="absolute w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-extrabold text-white border-2 border-moss-950 shadow-lg cursor-pointer transform -translate-x-1/2 -translate-y-1/2 hover:scale-125 transition-all duration-300 hover:bg-saffron-500"
                 >
                   📍
                 </button>
@@ -128,10 +128,10 @@ interface MapPin {
             </div>
 
             <!-- Right card info panel -->
-            <div class="lg:col-span-4 bg-peppercorn-900 border border-white/5 p-8 rounded-3xl shadow-xl space-y-4 animate-scale-in">
+            <div class="lg:col-span-4 bg-moss-900/60 border border-moss-800 p-8 rounded-3xl shadow-xl space-y-4 animate-scale-in">
               <span class="text-[10px] font-extrabold text-saffron-400 uppercase tracking-widest">Active Marker</span>
               <h3 class="text-2xl font-bold font-display text-white mt-1">{{ activePin().name }}</h3>
-              <div class="w-12 h-0.5 bg-chili-600 rounded-full"></div>
+              <div class="w-12 h-0.5 bg-saffron-500 rounded-full"></div>
               
               <div class="space-y-1 text-xs">
                 <span class="font-extrabold text-gray-400 uppercase block text-[10px]">Harvest Crop Sourced</span>
@@ -145,7 +145,7 @@ interface MapPin {
               <div class="pt-4 border-t border-white/5">
                 <a 
                   routerLink="/shop"
-                  class="inline-block w-full text-center py-3 bg-chili-600 hover:bg-chili-500 text-white font-extrabold text-xs rounded-xl shadow-md transition-all hover:scale-103"
+                  class="inline-block w-full text-center py-3 bg-gradient-to-r from-moss-700 to-moss-600 hover:from-saffron-600 hover:to-saffron-500 text-white font-extrabold text-xs rounded-xl shadow-md transition-all hover:scale-103"
                 >
                   View Origin Catalog
                 </a>
@@ -160,7 +160,7 @@ interface MapPin {
         <h2 class="text-3xl font-bold font-display text-peppercorn-950">A Clean Commitment</h2>
         <div class="w-12 h-1 bg-saffron-500 mx-auto rounded-full"></div>
         <p class="text-sm text-peppercorn-600 leading-relaxed max-w-2xl mx-auto font-medium">
-          Haldi & Horn was built on a simple premise: spices are the soul of cooking, and their purity should be protected. We reject irradiated warehouse stocks, chemical color enhancements, and exploitative supply chains. Every jar in our collection represents a direct, respectful link between grower and chef.
+          Sasya was built on a simple premise: spices are the soul of cooking, and their purity should be protected. We reject irradiated warehouse stocks, chemical color enhancements, and exploitative supply chains. Every jar in our collection represents a direct, respectful link between grower and chef.
         </p>
         <div class="flex items-center justify-center gap-8 pt-4 flex-wrap select-none">
           <span class="text-xs font-bold text-peppercorn-500 uppercase tracking-widest bg-white border border-cinnamon-100 rounded-xl px-4 py-2">✓ No GMO Pods</span>

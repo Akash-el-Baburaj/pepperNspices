@@ -12,6 +12,7 @@ export interface CartItem {
 export class CartService {
   // Signal state
   readonly cartItems = signal<CartItem[]>([]);
+  readonly appliedPromo = signal<string | null>(null);
 
   // Computed state
   readonly cartCount = computed(() => {
@@ -22,8 +23,16 @@ export class CartService {
     return this.cartItems().reduce((acc, item) => acc + (item.product.price * item.quantity), 0);
   });
 
+  readonly promoDiscount = computed(() => {
+    if (this.appliedPromo() === 'AKZ25') {
+      return this.cartSubtotal() * 0.25; // 25% coupon code discount
+    }
+    return 0;
+  });
+
   readonly cartTax = computed(() => {
-    return this.cartSubtotal() * 0.08; // 8% mock tax
+    const taxableSubtotal = Math.max(0, this.cartSubtotal() - this.promoDiscount());
+    return taxableSubtotal * 0.08; // 8% mock tax
   });
 
   readonly cartShipping = computed(() => {
@@ -33,7 +42,8 @@ export class CartService {
   });
 
   readonly cartTotal = computed(() => {
-    return this.cartSubtotal() + this.cartTax() + this.cartShipping();
+    const total = this.cartSubtotal() - this.promoDiscount() + this.cartTax() + this.cartShipping();
+    return Math.max(0, total);
   });
 
   addToCart(product: Product, quantity = 1) {
@@ -68,7 +78,20 @@ export class CartService {
     );
   }
 
+  applyPromo(code: string): boolean {
+    if (code.trim().toUpperCase() === 'AKZ25') {
+      this.appliedPromo.set('AKZ25');
+      return true;
+    }
+    return false;
+  }
+
+  removePromo() {
+    this.appliedPromo.set(null);
+  }
+
   clearCart() {
     this.cartItems.set([]);
+    this.appliedPromo.set(null);
   }
 }
