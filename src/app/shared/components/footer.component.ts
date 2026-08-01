@@ -14,8 +14,8 @@ import { RouterLink } from '@angular/router';
           <!-- Column 1: Brand & Bio -->
           <div class="space-y-4">
             <a routerLink="/" class="flex items-center gap-2 group">
-              <span class="w-8 h-8 rounded-lg bg-peppercorn-950 flex items-center justify-center overflow-hidden">
-                <img src="/images/sasya-logo.png" alt="Sasya Logo" class="w-full h-full object-cover" />
+              <span class="w-8 h-8 rounded-lg bg-white p-0.5 flex items-center justify-center overflow-hidden">
+                <img src="/images/sasya-logo.png" alt="Sasya Logo" class="w-full h-full object-contain" />
               </span>
               <span class="text-lg font-extrabold tracking-tight text-white font-display">SASYA</span>
             </a>

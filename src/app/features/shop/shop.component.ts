@@ -301,7 +301,7 @@ import { FormsModule } from '@angular/forms';
             @if (isLoading()) {
               <!-- Sasya custom splash loading pulse -->
               <div class="col-span-full flex flex-col items-center justify-center py-8 text-center space-y-3 select-none animate-pulse">
-                <div class="w-12 h-12 rounded-xl bg-peppercorn-950 flex items-center justify-center p-1.5 shadow-md border border-white/5">
+                <div class="w-12 h-12 rounded-xl bg-white flex items-center justify-center p-1.5 shadow-md border border-cinnamon-100">
                   <img src="/images/sasya-logo.png" alt="Sasya" class="w-full h-full object-contain" />
                 </div>
                 <span class="text-[10px] font-extrabold text-moss-700 uppercase tracking-widest block">Opening Sasya Vaults...</span>
