@@ -7,6 +7,7 @@ import { CartService } from '../../core/services/cart.service';
 import { RatingComponent } from '../../shared/components/rating.component';
 import { HeatLevelComponent } from '../../shared/components/heat-level.component';
 import { ProductCardComponent } from '../../shared/components/product-card.component';
+import { ActivityTrackingService } from '../../core/services/activity-tracking.service';
 
 @Component({
   selector: 'app-product-detail',
@@ -239,6 +240,7 @@ export class ProductDetailComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly cartService = inject(CartService);
+  private readonly activityService = inject(ActivityTrackingService);
 
   // States
   protected readonly product = signal<Product | null>(null);
@@ -275,6 +277,7 @@ export class ProductDetailComponent implements OnInit {
         this.product.set(p);
         this.activeImage.set(p.images[0]);
         this.isLoading.set(false);
+        this.activityService.track('VIEW_PRODUCT', `Viewed product: ${p.name}`, { productId: p.id, category: p.category });
 
         // Load related items
         this.mockApi.getProducts().subscribe(allProds => {

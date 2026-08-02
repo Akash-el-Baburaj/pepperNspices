@@ -5,6 +5,7 @@ import { MockApiService } from '../../core/services/mock-api.service';
 import { Product } from '../../core/mock-data/data';
 import { ProductCardComponent } from '../../shared/components/product-card.component';
 import { FormsModule } from '@angular/forms';
+import { ActivityTrackingService } from '../../core/services/activity-tracking.service';
 
 @Component({
   selector: 'app-shop',
@@ -15,12 +16,26 @@ import { FormsModule } from '@angular/forms';
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         <!-- SHOP HEADER / BANNER -->
-        <div class="mb-12 text-center md:text-left">
-          <span class="text-xs font-extrabold text-moss-700 uppercase tracking-widest block mb-1">Sasya Catalog</span>
-          <h1 class="text-4xl font-extrabold font-display text-peppercorn-950">Apothecary of Spices</h1>
-          <p class="text-xs md:text-sm text-peppercorn-500 max-w-xl mt-2 font-medium">
-            Browse our curated collections, filter by heat level or harvest origin, and elevate your culinary creations.
-          </p>
+        <div class="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
+          <div class="text-center md:text-left">
+            <span class="text-xs font-extrabold text-moss-700 uppercase tracking-widest block mb-1">Sasya Catalog</span>
+            <h1 class="text-4xl font-extrabold font-display text-peppercorn-950">Apothecary of Spices</h1>
+            <p class="text-xs md:text-sm text-peppercorn-500 max-w-xl mt-2 font-medium">
+              Browse our curated collections, filter by heat level or harvest origin, and elevate your culinary creations.
+            </p>
+          </div>
+          
+          <!-- Search box -->
+          <div class="w-full md:w-80 relative flex-shrink-0">
+            <input 
+              type="text"
+              [ngModel]="searchQuery()"
+              (ngModelChange)="onSearchChange($event)"
+              placeholder="Search spices (e.g. Kashmiri)..."
+              class="w-full text-xs font-semibold px-4 py-3 bg-white border border-sage-200 rounded-2xl focus:outline-none focus:border-moss-500 transition-colors shadow-2xs"
+            />
+            <span class="absolute right-4 top-3.5 text-peppercorn-450">🔎</span>
+          </div>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
@@ -111,7 +126,7 @@ import { FormsModule } from '@angular/forms';
                 max="100" 
                 step="5"
                 [ngModel]="maxPrice()"
-                (ngModelChange)="maxPrice.set($event)"
+                (ngModelChange)="onPriceChange($event)"
                 class="w-full h-1 bg-sage-200 rounded-lg appearance-none cursor-pointer accent-moss-600"
               />
               <div class="flex items-center justify-between text-[10px] text-peppercorn-400 font-bold">
@@ -125,7 +140,7 @@ import { FormsModule } from '@angular/forms';
               <h4 class="text-xs font-extrabold text-peppercorn-950 uppercase tracking-wider">Origin Estate</h4>
               <select 
                 [ngModel]="selectedOrigin()"
-                (ngModelChange)="selectedOrigin.set($event)"
+                (ngModelChange)="onOriginChange($event)"
                 class="w-full text-xs font-medium px-3 py-2 bg-sage-50/50 border border-sage-200 rounded-xl focus:outline-none focus:border-moss-500 transition-colors"
               >
                 <option value="all">All Origins</option>
@@ -179,7 +194,7 @@ import { FormsModule } from '@angular/forms';
                   <span class="text-xs text-peppercorn-500 font-bold hidden sm:inline">Sort:</span>
                   <select 
                     [ngModel]="sortBy()"
-                    (ngModelChange)="sortBy.set($event)"
+                    (ngModelChange)="onSortChange($event)"
                     class="text-xs font-bold text-peppercorn-900 border-none bg-transparent focus:outline-none cursor-pointer"
                   >
                     <option value="popularity">Popularity</option>
@@ -268,7 +283,7 @@ import { FormsModule } from '@angular/forms';
                         max="100" 
                         step="5"
                         [ngModel]="maxPrice()"
-                        (ngModelChange)="maxPrice.set($event)"
+                        (ngModelChange)="onPriceChange($event)"
                         class="w-full h-1 bg-sage-200 rounded-lg appearance-none cursor-pointer accent-moss-600"
                       />
                     </div>
@@ -276,7 +291,7 @@ import { FormsModule } from '@angular/forms';
                       <h4 class="text-xs font-extrabold text-peppercorn-950 uppercase tracking-wider">Origin Estate</h4>
                       <select 
                         [ngModel]="selectedOrigin()"
-                        (ngModelChange)="selectedOrigin.set($event)"
+                        (ngModelChange)="onOriginChange($event)"
                         class="w-full text-xs font-medium px-3 py-2 bg-sage-50/50 border border-sage-200 rounded-xl"
                       >
                         <option value="all">All Origins</option>
@@ -385,6 +400,7 @@ import { FormsModule } from '@angular/forms';
 export class ShopComponent implements OnInit {
   private readonly mockApi = inject(MockApiService);
   private readonly route = inject(ActivatedRoute);
+  private readonly activityService = inject(ActivityTrackingService);
 
   // Raw states
   protected readonly products = signal<Product[]>([]);
@@ -396,6 +412,7 @@ export class ShopComponent implements OnInit {
   protected readonly maxPrice = signal<number>(100);
   protected readonly selectedOrigin = signal<string>('all');
   protected readonly sortBy = signal<string>('popularity');
+  protected readonly searchQuery = signal<string>('');
   
   // View mode
   protected readonly viewMode = signal<'grid' | 'list'>('grid');
@@ -428,6 +445,12 @@ export class ShopComponent implements OnInit {
   // REACTIVELY FILTERED & SORTED LIST
   protected readonly filteredProducts = computed(() => {
     let items = this.products();
+
+    // 0. Filter by name search query
+    const query = this.searchQuery().trim().toLowerCase();
+    if (query) {
+      items = items.filter(p => p.name.toLowerCase().includes(query) || p.description.toLowerCase().includes(query));
+    }
 
     // 1. Filter by category
     const cat = this.selectedCategory();
@@ -484,10 +507,35 @@ export class ShopComponent implements OnInit {
 
   setCategory(category: string) {
     this.selectedCategory.set(category);
+    this.activityService.track('FILTER_PRODUCTS', `Filtered collection by collection: ${category.replace('-', ' ')}`, { category });
   }
 
   setHeat(heat: number | null) {
     this.selectedHeat.set(heat);
+    const label = heat === null ? 'All heat levels' : `Heat level ${heat}`;
+    this.activityService.track('FILTER_PRODUCTS', `Filtered collection by heat: ${label}`, { heatLevel: heat });
+  }
+
+  onPriceChange(price: number) {
+    this.maxPrice.set(price);
+    this.activityService.track('FILTER_PRODUCTS', `Filtered collection by max price: $${price}`, { maxPrice: price });
+  }
+
+  onOriginChange(origin: string) {
+    this.selectedOrigin.set(origin);
+    this.activityService.track('FILTER_PRODUCTS', `Filtered collection by origin: ${origin}`, { origin });
+  }
+
+  onSortChange(sort: string) {
+    this.sortBy.set(sort);
+    this.activityService.track('SORT_PRODUCTS', `Sorted products by: ${sort}`, { sortBy: sort });
+  }
+
+  onSearchChange(query: string) {
+    this.searchQuery.set(query);
+    if (query.trim()) {
+      this.activityService.track('SEARCH', `Searched for spices: "${query}"`, { query });
+    }
   }
 
   resetFilters() {
@@ -496,5 +544,7 @@ export class ShopComponent implements OnInit {
     this.maxPrice.set(100);
     this.selectedOrigin.set('all');
     this.sortBy.set('popularity');
+    this.searchQuery.set('');
+    this.activityService.track('FILTER_PRODUCTS', 'Cleared all catalog filter options');
   }
 }

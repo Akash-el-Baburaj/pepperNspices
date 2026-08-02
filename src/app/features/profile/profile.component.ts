@@ -6,11 +6,13 @@ import { MockAuthService, User } from '../../core/services/mock-auth.service';
 import { MockUserService, Order, Address } from '../../core/services/mock-user.service';
 import { CartService } from '../../core/services/cart.service';
 import { Product } from '../../core/mock-data/data';
+import { OrderTrackerComponent } from '../../shared/components/order-tracker.component';
+import { ActivityTrackingService } from '../../core/services/activity-tracking.service';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule, OrderTrackerComponent],
   template: `
     <div class="min-h-screen bg-cinnamon-50 pt-32 pb-24">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -142,10 +144,12 @@ import { Product } from '../../core/mock-data/data';
                             <span 
                               [class.bg-emerald-50]="order.status === 'Delivered'"
                               [class.text-emerald-700]="order.status === 'Delivered'"
-                              [class.bg-saffron-50]="order.status === 'In Transit'"
-                              [class.text-saffron-700]="order.status === 'In Transit'"
-                              [class.bg-chili-50]="order.status === 'Processing'"
-                              [class.text-chili-700]="order.status === 'Processing'"
+                              [class.bg-saffron-50]="order.status === 'Shipped' || order.status === 'Out for Delivery'"
+                              [class.text-saffron-700]="order.status === 'Shipped' || order.status === 'Out for Delivery'"
+                              [class.bg-chili-50]="order.status === 'Placed' || order.status === 'Processing' || order.status === 'Packed'"
+                              [class.text-chili-700]="order.status === 'Placed' || order.status === 'Processing' || order.status === 'Packed'"
+                              [class.bg-red-50]="order.status === 'Cancelled'"
+                              [class.text-red-700]="order.status === 'Cancelled'"
                               class="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-lg border"
                             >
                               {{ order.status }}
@@ -164,8 +168,19 @@ import { Product } from '../../core/mock-data/data';
 
                         <!-- Expanded details view -->
                         @if (expandedOrder() === order.id) {
-                          <div class="p-5 border-t border-cinnamon-100 bg-white space-y-4 animate-scale-in text-xs">
-                            <h4 class="text-[10px] uppercase font-bold text-peppercorn-500 tracking-wider">Crate Shipments</h4>
+                          <div class="p-5 border-t border-cinnamon-100 bg-white space-y-6 animate-scale-in text-xs">
+                            <div class="flex justify-between items-center border-b border-cinnamon-50 pb-2 flex-wrap gap-2">
+                              <h4 class="text-[10px] uppercase font-bold text-peppercorn-500 tracking-wider">Crate Shipments</h4>
+                              <a 
+                                [routerLink]="['/track-order', order.id]"
+                                class="text-xs font-bold text-chili-600 hover:text-chili-700 underline flex items-center gap-1 uppercase tracking-widest"
+                              >
+                                <span>Open Standalone Tracker Page ➔</span>
+                              </a>
+                            </div>
+
+                            <app-order-tracker [order]="order"></app-order-tracker>
+
                             <div class="divide-y divide-cinnamon-100">
                               @for (item of order.items; track item.productId) {
                                 <div class="flex items-center justify-between py-2.5">
@@ -370,6 +385,41 @@ import { Product } from '../../core/mock-data/data';
 
                 </div>
               }
+ 
+               <!-- TAB 6: RECENT ACTIVITY -->
+               @if (activeTab() === 'activity') {
+                 <div class="space-y-6 animate-fade-in text-xs font-semibold">
+                   <div class="flex items-center justify-between border-b border-cinnamon-50 pb-2">
+                     <h3 class="text-base font-bold font-display text-peppercorn-950">Apothecary Activity Logs</h3>
+                     <button (click)="onClearLogs()" class="text-xs font-bold text-chili-600 hover:text-chili-700 underline uppercase tracking-wider">Clear Logs</button>
+                   </div>
+ 
+                   @if (logs().length === 0) {
+                     <div class="text-center py-12 text-peppercorn-500 space-y-2">
+                       <span class="text-4xl block">📝</span>
+                       <h4 class="text-sm font-bold text-peppercorn-900">No Logs Recorded</h4>
+                       <p class="text-xs text-peppercorn-400 max-w-xs mx-auto">Interact with products, add spices to your crate, or update profile settings to generate logs.</p>
+                     </div>
+                   } @else {
+                     <div class="space-y-3 max-h-[500px] overflow-y-auto pr-2 scrollbar-thin">
+                       @for (log of logs(); track log.id) {
+                         <div class="flex items-start gap-4 p-3 border border-cinnamon-50 rounded-xl bg-cinnamon-50/20 shadow-2xs hover:bg-cinnamon-50/40 transition-colors">
+                           <div class="text-lg p-2 bg-white rounded-lg shadow-3xs flex items-center justify-center flex-shrink-0">
+                             {{ getActionIcon(log.action) }}
+                           </div>
+                           <div class="flex-grow space-y-1">
+                             <div class="flex justify-between items-baseline gap-2">
+                               <span class="text-peppercorn-900 font-bold text-[13px] leading-tight">{{ log.label }}</span>
+                               <span class="text-[10px] text-peppercorn-400 font-bold whitespace-nowrap">{{ getRelativeTime(log.timestamp) }}</span>
+                             </div>
+                             <div class="text-[9px] uppercase font-bold tracking-widest text-chili-600/80">Action: {{ log.action }}</div>
+                           </div>
+                         </div>
+                       }
+                     </div>
+                   }
+                 </div>
+               }
 
             </div>
 
@@ -385,6 +435,7 @@ export class ProfileComponent implements OnInit {
   private readonly userService = inject(MockUserService);
   private readonly cartService = inject(CartService);
   private readonly router = inject(Router);
+  private readonly activityService = inject(ActivityTrackingService);
 
   // Gated user signal reference
   protected readonly user = this.authService.currentUser;
@@ -396,6 +447,7 @@ export class ProfileComponent implements OnInit {
   protected readonly orders = this.userService.orders;
   protected readonly addresses = this.userService.addresses;
   protected readonly wishlist = this.userService.wishlist;
+  protected readonly logs = this.activityService.logs;
 
   // Expanding states
   protected readonly expandedOrder = signal<string | null>(null);
@@ -408,8 +460,56 @@ export class ProfileComponent implements OnInit {
     { id: 'orders', label: 'Order History', icon: '📦' },
     { id: 'wishlist', label: 'Wishlist Shelf', icon: '✨' },
     { id: 'addresses', label: 'Saved Addresses', icon: '🏠' },
-    { id: 'settings', label: 'Account Settings', icon: '⚙️' }
+    { id: 'settings', label: 'Account Settings', icon: '⚙️' },
+    { id: 'activity', label: 'Recent Activity', icon: '📝' }
   ];
+
+  getRelativeTime(timestampStr: string): string {
+    const now = new Date();
+    const time = new Date(timestampStr);
+    const diffMs = now.getTime() - time.getTime();
+    const diffSec = Math.floor(diffMs / 1000);
+    const diffMin = Math.floor(diffSec / 60);
+    const diffHour = Math.floor(diffMin / 60);
+    const diffDay = Math.floor(diffHour / 24);
+
+    if (diffSec < 5) return 'Just now';
+    if (diffSec < 60) return `${diffSec} seconds ago`;
+    if (diffMin === 1) return '1 minute ago';
+    if (diffMin < 60) return `${diffMin} minutes ago`;
+    if (diffHour === 1) return '1 hour ago';
+    if (diffHour < 24) return `${diffHour} hours ago`;
+    if (diffDay === 1) return 'Yesterday';
+    return `${diffDay} days ago`;
+  }
+
+  getActionIcon(action: string): string {
+    switch (action) {
+      case 'VIEW_PRODUCT': return '🔍';
+      case 'ADD_TO_CART': return '📥';
+      case 'REMOVE_FROM_CART': return '📤';
+      case 'UPDATE_QTY': return '🔄';
+      case 'APPLY_PROMO': return '🏷️';
+      case 'REMOVE_PROMO': return '🏷️';
+      case 'REGISTER': return '🔑';
+      case 'LOGIN': return '🔑';
+      case 'LOGOUT': return '🚪';
+      case 'PLACE_ORDER': return '📦';
+      case 'UPDATE_PROFILE': return '👤';
+      case 'ADD_ADDRESS': return '🏠';
+      case 'DELETE_ADDRESS': return '🏠';
+      case 'TOGGLE_WISHLIST': return '✨';
+      case 'FILTER_PRODUCTS': return '🎛️';
+      case 'SORT_PRODUCTS': return '🔀';
+      case 'SEARCH': return '🔎';
+      case 'SIMULATE_ORDER_STATUS': return '🚀';
+      default: return '📝';
+    }
+  }
+
+  onClearLogs() {
+    this.activityService.clearLogs();
+  }
 
   // Forms bound state variables
   protected profileForm = { name: '', email: '', phone: '' };
@@ -449,6 +549,7 @@ export class ProfileComponent implements OnInit {
       if (typeof window !== 'undefined') {
         localStorage.setItem('spice_mock_user', JSON.stringify(updatedUser));
       }
+      this.activityService.track('UPDATE_PROFILE', `Updated profile info for ${updatedUser.name}`, { name: updatedUser.name, email: updatedUser.email });
       this.isEditingProfile.set(false);
     }
   }

@@ -1,5 +1,6 @@
-import { Injectable, signal, computed } from '@angular/core';
+import { Injectable, signal, computed, inject } from '@angular/core';
 import { Product } from '../mock-data/data';
+import { ActivityTrackingService } from './activity-tracking.service';
 
 export interface CartItem {
   product: Product;
@@ -10,6 +11,8 @@ export interface CartItem {
   providedIn: 'root'
 })
 export class CartService {
+  private readonly activityService = inject(ActivityTrackingService);
+
   // Signal state
   readonly cartItems = signal<CartItem[]>([]);
   readonly appliedPromo = signal<string | null>(null);
@@ -58,40 +61,54 @@ export class CartService {
       }
       return [...items, { product, quantity }];
     });
+    this.activityService.track('ADD_TO_CART', `Added ${product.name} x${quantity} to crate`, { productId: product.id, quantity });
   }
 
   updateQuantity(productId: string, quantity: number) {
+    const item = this.cartItems().find(i => i.product.id === productId);
+    if (!item) return;
+
     if (quantity <= 0) {
       this.removeFromCart(productId);
       return;
     }
     this.cartItems.update(items =>
-      items.map(item =>
-        item.product.id === productId ? { ...item, quantity } : item
+      items.map(i =>
+        i.product.id === productId ? { ...i, quantity } : i
       )
     );
+    this.activityService.track('UPDATE_QTY', `Updated quantity of ${item.product.name} to x${quantity}`, { productId, quantity });
   }
 
   removeFromCart(productId: string) {
+    const item = this.cartItems().find(i => i.product.id === productId);
+    if (!item) return;
+
     this.cartItems.update(items =>
-      items.filter(item => item.product.id !== productId)
+      items.filter(i => i.product.id !== productId)
     );
+    this.activityService.track('REMOVE_FROM_CART', `Removed ${item.product.name} from crate`, { productId });
   }
 
   applyPromo(code: string): boolean {
     if (code.trim().toUpperCase() === 'AKZ25') {
       this.appliedPromo.set('AKZ25');
+      this.activityService.track('APPLY_PROMO', `Applied discount code: ${code.trim().toUpperCase()}`, { code: code.trim().toUpperCase() });
       return true;
     }
+    this.activityService.track('APPLY_PROMO_FAILED', `Failed to apply discount code: ${code}`, { code });
     return false;
   }
 
   removePromo() {
+    const code = this.appliedPromo();
     this.appliedPromo.set(null);
+    this.activityService.track('REMOVE_PROMO', `Removed discount code: ${code}`, { code });
   }
 
   clearCart() {
     this.cartItems.set([]);
     this.appliedPromo.set(null);
+    this.activityService.track('CLEAR_CART', 'Cleared all items from crate');
   }
 }

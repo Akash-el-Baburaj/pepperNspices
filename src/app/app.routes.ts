@@ -38,6 +38,10 @@ export const routes: Routes = [
     loadComponent: () => import('./features/profile/profile.component').then(m => m.ProfileComponent)
   },
   {
+    path: 'track-order/:orderId',
+    loadComponent: () => import('./features/track-order/track-order.component').then(m => m.TrackOrderComponent)
+  },
+  {
     path: '**',
     redirectTo: ''
   }

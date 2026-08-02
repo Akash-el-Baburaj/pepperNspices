@@ -2,6 +2,7 @@ import { Injectable, signal, computed, inject } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { delay, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { ActivityTrackingService } from './activity-tracking.service';
 
 export interface User {
   id: string;
@@ -16,6 +17,7 @@ export interface User {
 })
 export class MockAuthService {
   private readonly router = inject(Router);
+  private readonly activityService = inject(ActivityTrackingService);
 
   // Core signals for auth state
   readonly currentUser = signal<User | null>(null);
@@ -47,6 +49,7 @@ export class MockAuthService {
         if (typeof window !== 'undefined') {
           localStorage.setItem('spice_mock_user', JSON.stringify(mockUser));
         }
+        this.activityService.track('LOGIN', `Logged in as ${mockUser.name} (${mockUser.email})`, { email: mockUser.email });
       })
     );
   }
@@ -67,15 +70,20 @@ export class MockAuthService {
         if (typeof window !== 'undefined') {
           localStorage.setItem('spice_mock_user', JSON.stringify(mockUser));
         }
+        this.activityService.track('REGISTER', `Registered new merchant: ${mockUser.name} (${mockUser.email})`, { name: mockUser.name, email: mockUser.email });
       })
     );
   }
 
   logout() {
+    const user = this.currentUser();
+    const emailLabel = user ? `${user.name} (${user.email})` : 'unknown user';
+    
     this.currentUser.set(null);
     if (typeof window !== 'undefined') {
       localStorage.removeItem('spice_mock_user');
     }
+    this.activityService.track('LOGOUT', `Logged out from apothecary account: ${emailLabel}`);
     this.router.navigate(['/']);
   }
 }

@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CartService } from '../../core/services/cart.service';
+import { MockUserService, Order, OrderItem } from '../../core/services/mock-user.service';
+import { ActivityTrackingService } from '../../core/services/activity-tracking.service';
 
 @Component({
   selector: 'app-checkout',
@@ -281,7 +283,7 @@ import { CartService } from '../../core/services/cart.service';
               <div class="max-w-xs mx-auto p-4 bg-cinnamon-50 border border-cinnamon-100 rounded-2xl text-left space-y-1.5 text-xs font-semibold animate-fade-in">
                 <div class="flex justify-between">
                   <span class="text-peppercorn-400">Order ID</span>
-                  <span class="text-peppercorn-900 font-mono">#SASYA-82937-26</span>
+                  <span class="text-peppercorn-900 font-mono">{{ placedOrderId }}</span>
                 </div>
                 @if (finalAppliedPromo) {
                   <div class="flex justify-between text-emerald-700">
@@ -318,6 +320,8 @@ import { CartService } from '../../core/services/cart.service';
 })
 export class CheckoutComponent {
   private readonly cartService = inject(CartService);
+  private readonly userService = inject(MockUserService);
+  private readonly activityService = inject(ActivityTrackingService);
 
   protected readonly currentStep = signal<number>(1);
 
@@ -331,6 +335,7 @@ export class CheckoutComponent {
 
   protected finalTotalPaid = 0;
   protected finalAppliedPromo = '';
+  protected placedOrderId = '';
 
   protected promoInput = '';
   protected promoError = signal<string | null>(null);
@@ -382,9 +387,45 @@ export class CheckoutComponent {
   }
 
   placeOrder() {
-    // Capture final summary details before clearing cart signals
     this.finalTotalPaid = this.total();
     this.finalAppliedPromo = this.cartService.appliedPromo() || '';
+
+    // Generate dynamic unique order
+    const randomId = `#SASYA-${Math.floor(10000 + Math.random() * 90000)}-${Math.floor(10 + Math.random() * 90)}`;
+    this.placedOrderId = randomId;
+
+    const formattedDate = new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' });
+    const formattedEstDate = new Date(Date.now() + 4 * 24 * 60 * 60 * 1000).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }); // 4 days delivery est
+
+    const items: OrderItem[] = this.cartItems().map(item => ({
+      productId: item.product.id,
+      name: item.product.name,
+      quantity: item.quantity,
+      price: item.product.price,
+      image: item.product.images[0]
+    }));
+
+    const newOrder: Order = {
+      id: randomId,
+      date: formattedDate,
+      items,
+      status: 'Placed',
+      currentStep: 0,
+      total: this.finalTotalPaid,
+      shippingAddress: `${this.shippingData.address}, ${this.shippingData.city}, ${this.shippingData.zip}, ${this.shippingData.country}`,
+      estimatedDelivery: formattedEstDate,
+      courier: 'Sasya Express Ground',
+      trackingNumber: `SASYA-${Math.floor(1000000 + Math.random() * 9000000)}`,
+      history: [
+        { status: 'Placed', timestamp: new Date().toISOString(), note: 'Order placed successfully by buyer.' }
+      ]
+    };
+
+    // Save newly created order to MockUserService orders signal
+    this.userService.addOrder(newOrder);
+
+    // Track placing order action
+    this.activityService.track('PLACE_ORDER', `Placed order: ${randomId} for $${this.finalTotalPaid.toFixed(2)}`, { orderId: randomId, total: this.finalTotalPaid });
 
     // Clear shopping cart state and transition to final summary
     this.cartService.clearCart();
