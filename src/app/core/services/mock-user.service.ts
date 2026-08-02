@@ -30,6 +30,7 @@ export interface Order {
   courier: string;
   trackingNumber: string;
   history: OrderHistoryStep[];
+  appliedPromo?: string;
 }
 
 export interface Address {
@@ -49,6 +50,29 @@ export interface Address {
 export class MockUserService {
   private readonly activityService = inject(ActivityTrackingService);
   private readonly LATENCY_MS = 250;
+
+  constructor() {
+    if (typeof window !== 'undefined') {
+      try {
+        const saved = localStorage.getItem('sasya_mock_orders');
+        if (saved) {
+          this.orders.set(JSON.parse(saved));
+        }
+      } catch (e) {
+        console.error('Failed to parse orders from localStorage', e);
+      }
+    }
+  }
+
+  private saveOrders(ordersList: Order[]) {
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.setItem('sasya_mock_orders', JSON.stringify(ordersList));
+      } catch (e) {
+        console.error('Failed to save orders to localStorage', e);
+      }
+    }
+  }
 
   // Signal arrays for live mutation
   readonly wishlist = signal<Product[]>([
@@ -188,14 +212,18 @@ export class MockUserService {
 
   // Order Actions
   addOrder(order: Order) {
-    this.orders.update(currentOrders => [order, ...currentOrders]);
+    this.orders.update(currentOrders => {
+      const updated = [order, ...currentOrders];
+      this.saveOrders(updated);
+      return updated;
+    });
   }
 
   advanceOrderStatus(orderId: string) {
     const STAGES: Order['status'][] = ['Placed', 'Processing', 'Packed', 'Shipped', 'Out for Delivery', 'Delivered'];
     
-    this.orders.update(currentOrders => 
-      currentOrders.map(order => {
+    this.orders.update(currentOrders => {
+      const updated = currentOrders.map(order => {
         if (order.id === orderId) {
           if (order.status === 'Delivered' || order.status === 'Cancelled') {
             return order;
@@ -238,7 +266,9 @@ export class MockUserService {
           };
         }
         return order;
-      })
-    );
+      });
+      this.saveOrders(updated);
+      return updated;
+    });
   }
 }

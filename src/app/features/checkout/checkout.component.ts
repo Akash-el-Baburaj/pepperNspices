@@ -285,6 +285,15 @@ import { ActivityTrackingService } from '../../core/services/activity-tracking.s
                   <span class="text-peppercorn-400">Order ID</span>
                   <span class="text-peppercorn-900 font-mono">{{ placedOrderId }}</span>
                 </div>
+                <div class="flex justify-between items-center text-[10px] uppercase font-bold tracking-wider pt-1 pb-1 border-b border-cinnamon-100/50">
+                  <span class="text-peppercorn-400">Actions</span>
+                  <a 
+                    [routerLink]="['/receipt', placedOrderId.replace('#', '')]"
+                    class="text-moss-700 hover:text-moss-900 underline font-extrabold"
+                  >
+                    View Invoice Receipt 🧾
+                  </a>
+                </div>
                 @if (finalAppliedPromo) {
                   <div class="flex justify-between text-emerald-700">
                     <span>Promo Applied</span>
@@ -418,7 +427,8 @@ export class CheckoutComponent {
       trackingNumber: `SASYA-${Math.floor(1000000 + Math.random() * 9000000)}`,
       history: [
         { status: 'Placed', timestamp: new Date().toISOString(), note: 'Order placed successfully by buyer.' }
-      ]
+      ],
+      appliedPromo: this.finalAppliedPromo || undefined
     };
 
     // Save newly created order to MockUserService orders signal

@@ -42,6 +42,10 @@ export const routes: Routes = [
     loadComponent: () => import('./features/track-order/track-order.component').then(m => m.TrackOrderComponent)
   },
   {
+    path: 'receipt/:orderId',
+    loadComponent: () => import('./features/receipt/receipt.component').then(m => m.ReceiptComponent)
+  },
+  {
     path: '**',
     redirectTo: ''
   }

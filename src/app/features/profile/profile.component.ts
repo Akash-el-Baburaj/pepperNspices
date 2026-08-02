@@ -171,12 +171,20 @@ import { ActivityTrackingService } from '../../core/services/activity-tracking.s
                           <div class="p-5 border-t border-cinnamon-100 bg-white space-y-6 animate-scale-in text-xs">
                             <div class="flex justify-between items-center border-b border-cinnamon-50 pb-2 flex-wrap gap-2">
                               <h4 class="text-[10px] uppercase font-bold text-peppercorn-500 tracking-wider">Crate Shipments</h4>
-                              <a 
-                                [routerLink]="['/track-order', order.id]"
-                                class="text-xs font-bold text-chili-600 hover:text-chili-700 underline flex items-center gap-1 uppercase tracking-widest"
-                              >
-                                <span>Open Standalone Tracker Page ➔</span>
-                              </a>
+                              <div class="flex items-center gap-4 flex-wrap">
+                                <a 
+                                  [routerLink]="['/receipt', order.id]"
+                                  class="text-xs font-bold text-moss-700 hover:text-moss-900 underline flex items-center gap-1 uppercase tracking-widest"
+                                >
+                                  <span>View Receipt 🧾</span>
+                                </a>
+                                <a 
+                                  [routerLink]="['/track-order', order.id]"
+                                  class="text-xs font-bold text-chili-600 hover:text-chili-700 underline flex items-center gap-1 uppercase tracking-widest"
+                                >
+                                  <span>Open Standalone Tracker Page ➔</span>
+                                </a>
+                              </div>
                             </div>
 
                             <app-order-tracker [order]="order"></app-order-tracker>
